@@ -16,8 +16,8 @@ class ContentTree {
 		$newBlobId = sha1($contents);
 		$newArticleId = sha1($blankBlobId . $contents);
 		
-		$this->database->query("insert into blobs values('$newBlobId', '$blankBlobId', '$contents');");
-		$this->database->query("insert into articles values('$newArticleId', '$blankBlobId', '$blankBlobId');");
+		$this->database->query("insert into blobs values('$newBlobId', '$blankBlobId', null, true, false, false, false, 0, 1, '$contents');");
+		$this->database->query("insert into articles values('$newArticleId', '$newBlobId', '$newBlobId');");
 	}
 	
 }
