@@ -20,7 +20,11 @@ class Database {
 	
 	public function query($query) {
 		$this->queryResult = $this->databaseConnection->query($query);
-		$this->numberOfResultsLeft = $this->numberOfResultsTotal = $this->queryResult->num_rows;
+		echo $this->databaseConnection->error;
+		
+		if(isset($this->queryResult->num_rows)) {
+			$this->numberOfResultsLeft = $this->numberOfResultsTotal = $this->queryResult->num_rows;
+		}
 	}
 	
 	public function getTotalNumberOfResults() {
