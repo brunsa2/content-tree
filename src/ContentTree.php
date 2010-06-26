@@ -64,7 +64,7 @@ class ContentTree {
 				throw new Exception('Broken tree');
 			} else {
 				$blob = $this->database->fetchRow();
-				echo $blobId . ': ' . (strlen($blob['data']) > 50 ? substr($blob['data'], 0, 50) . '...' : $blob['data']) . '<br />';
+				echo $blobId . ': ' . strlen($blob['data']) > 50 ? substr($blob['data'], 0, 50) . '...' : $blob['data'] . '<br />';
 				$blobId = $blob['parent'];
 			}
 		}
