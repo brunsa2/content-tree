@@ -16,22 +16,32 @@ class ContentTree {
 		
 		$blankBlobId = sha1('');
 		$newBlobId = sha1($contents . $timestamp);
-		$newArticleId = sha1($blankBlobId . $contents . $timestamp);
+		$newArticleId = sha1($newBlobId . $contents . $timestamp);
 		
-		$this->database->query("insert into blobs values('$newBlobId', '$blankBlobId', null, true, false, false, false, '$timestamp', 0, 1, '$contents');");
+		$this->database->query("insert into blobs values('$newBlobId', '$blankBlobId', null, true, false, false, false, '$timestamp', 0, 2, '$contents');");
 		$this->database->query("insert into articles values('$newArticleId', '$timestamp', '$newBlobId', '$newBlobId');");
 	}
 	
-	public function updateArticle($parentId, $contents = '') {
+	public function updateArticle($articleId, $contents = '') {
 		$timestamp = date('Y-m-d H:i:s');
+		$parentBlobId = '';
+		
+		$this->database->query("select content from articles where sha='$articleId';");
+		
+		if(!$this->database->isResultAvailable()) {
+			throw new Exception('Article not found');
+		} else {
+			$blob = $this->database->fetchRow();
+			$parentBlobId = $blob['content'];
+		}
 		
 		$newBlobId = sha1($contents . $timestamp);
-		$newArticleId = sha1($parentId . $contents . $timestamp);
+		$newArticleId = sha1($newBlobId . $contents . $timestamp);
 		
-		$this->database->query("insert into blobs values('$newBlobId', '$parentId', null, true, false, false, false, '$timestamp', 0, 1, '$contents');");
+		$this->database->query("insert into blobs values('$newBlobId', '$parentBlobId', null, true, false, false, false, '$timestamp', 0, 2, '$contents');");
 		$this->database->query("insert into articles values('$newArticleId', '$timestamp', '$newBlobId', '$newBlobId');");
 		
-		$this->database->query("update blobs set tip = false, content_references = content_references + 1 where sha = '$parentId';");
+		$this->database->query("update blobs set tip = false, content_references = content_references + 1 where sha = '$parentBlobId';");
 	}
 	
 	
