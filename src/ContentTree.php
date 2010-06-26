@@ -34,6 +34,19 @@ class ContentTree {
 		$this->database->query("update blobs set tip = false, content_references = content_references + 1 where sha = '$parentId';");
 	}
 	
-	
+	public function traverse($articleId) {
+		$blobId = '';
+		
+		$this->database->query("select content from articles where sha='$articleId';");
+		
+		if(!$this->database->isResultAvailable()) {
+			throw new Exception('Article not found');
+		} else {
+			$blob = $this->database->fetchRow();
+			$blobId = $blob['content'];
+		}
+		
+		
+	}
 	
 }
