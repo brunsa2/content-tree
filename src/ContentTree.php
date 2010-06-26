@@ -46,6 +46,7 @@ class ContentTree {
 	
 	public function traverse($articleId) {
 		$blobId = '';
+		$blankBlobId = sha1('');
 		
 		$this->database->query("select content from articles where sha='$articleId';");
 		
@@ -56,7 +57,17 @@ class ContentTree {
 			$blobId = $blob['content'];
 		}
 		
-		
+		while($blobId != $blankBlobId) {
+			$this->database->query("select parent, data from blobs where sha='$blobId';");
+			
+			if(!$this->database->isResultAvailable()) {
+				throw new Exception('Broken tree');
+			} else {
+				$blob = $this->database->fetchRow();
+				echo $blobId . ': ' . strlen($blob['data']) > 50 ? substr($blob['data'], 0, 50) . '...' : $blob['data'] . '<br />';
+				$blobId = $blob['parent'];
+			}
+		}
 	}
 	
 }
