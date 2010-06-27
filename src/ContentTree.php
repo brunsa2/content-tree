@@ -48,7 +48,7 @@ class ContentTree {
 		$blobId = '';
 		$blankBlobId = sha1('');
 		
-		$this->database->query("select content from articles where sha='$articleId';");
+		$this->database->query("select content from articles where sha = '$articleId';");
 		
 		if(!$this->database->isResultAvailable()) {
 			throw new Exception('Article not found');
@@ -58,7 +58,7 @@ class ContentTree {
 		}
 		
 		while($blobId != $blankBlobId) {
-			$this->database->query("select parent, data from blobs where sha='$blobId';");
+			$this->database->query("select parent, data from blobs where sha = '$blobId';");
 			
 			if(!$this->database->isResultAvailable()) {
 				throw new Exception('Broken tree');
