@@ -39,9 +39,9 @@ class ContentTree {
 		$newBlobId = sha1($contents . $timestamp);
 		
 		$this->database->query("insert into blobs values('$newBlobId', '$parentBlobId', null, true, false, false, false, '$timestamp', 0, 2, '$contents');");
-		$this->database->query("update article set content = '$newBlobId', history = '$newBlobId';");
+		$this->database->query("update articles set content = '$newBlobId', history = '$newBlobId';");
 		
-		$this->database->query("update blobs set tip = false, content_references = content_references + 1 where sha = '$parentBlobId';");
+		$this->database->query("update blobs set tip = false, content_references = content_references + 1, article_references = article_references - 2 where sha = '$parentBlobId';");
 	}
 	
 	public function traverse($articleId) {
