@@ -70,4 +70,21 @@ class ContentTree {
 		}
 	}
 	
+	public function revert($articleId, $newBlobId) {
+		$oldBlobId = '';
+		
+		$this->database->query("select content from articles where sha = '$articleId';");
+		
+		if(!$this->database->isResultAvailable()) {
+			throw new Exception('Article not found');
+		} else {
+			$blob = $this->database->fetchRow();
+			$oldBlobId = $blob['content'];
+		}
+		
+		$this->database->query("update articles set content = '$newBlobId' where sha = '$articleId';");
+		$this->database->query("update blobs set article_references = article_references - 1 where sha = '$oldBlobId';");
+		$this->database->query("update blobs set article_references = article_references + 1 where sha = '$newBlobId';");
+	}
+	
 }
