@@ -20,6 +20,7 @@ class ContentTree {
 		
 		$this->database->query("insert into blobs values('$newBlobId', '$blankBlobId', null, true, false, false, false, '$timestamp', 0, 2, '$contents');");
 		$this->database->query("insert into articles values('$newArticleId', '$timestamp', '$newBlobId', '$newBlobId');");
+		$this->database->query("update blobs set content_references = content_references + 1 where sha = '$blankBlobId';");
 	}
 	
 	public function updateArticle($articleId, $contents = '') {
